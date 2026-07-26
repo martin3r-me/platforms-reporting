@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Log;
 use Platform\Core\Models\VerbalizationFeed;
 use Platform\Core\Models\VerbalizationOutput;
 use Platform\Core\Verbalization\GuardRails;
-use Platform\Core\Verbalization\Recipe\RecipeResolver;
+use Platform\Reporting\Verbalization\Recipe\RecipeResolver;
 use Platform\Core\Verbalization\StyleProfile;
 use Platform\Core\Verbalization\SubjectCollector\SubjectCollectorRegistry;
-use Platform\Core\Verbalization\Verbalizer;
+use Platform\Reporting\Verbalization\Verbalizer;
 
 /**
  * Orchestriert die Feed-Pipeline:
@@ -32,7 +32,7 @@ class FeedService
         protected SubjectCollectorRegistry $collectors,
         protected RecipeResolver $recipes,
         protected Verbalizer $verbalizer,
-        protected ?\Platform\Core\Verbalization\Channel\ChannelRendererRegistry $channels = null,
+        protected ?\Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry $channels = null,
     ) {}
 
     /**
@@ -313,7 +313,7 @@ class FeedService
                 $metricsBag = $subject->meta['metrics_bag'] ?? null;
                 if (is_array($metricsBag) && ! empty($metricsBag)) {
                     try {
-                        app(\Platform\Core\Verbalization\Baseline\BaselineService::class)
+                        app(\Platform\Reporting\Verbalization\Baseline\BaselineService::class)
                             ->snapshot($subject->type, (string) $subject->id, $metricsBag);
                     } catch (\Throwable $e) {
                         Log::warning('[FeedService] baseline snapshot failed', [
@@ -378,7 +378,7 @@ class FeedService
 
         foreach ($channels as $channel) {
             $renderer = $this->channels->resolve($channel->type);
-            if (! $renderer instanceof \Platform\Core\Verbalization\Channel\PushChannelInterface) {
+            if (! $renderer instanceof \Platform\Reporting\Verbalization\Channel\PushChannelInterface) {
                 // Pull-Kanaele oder unbekannter Typ — nichts zu tun.
                 continue;
             }

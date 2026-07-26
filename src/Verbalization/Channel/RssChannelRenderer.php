@@ -5,7 +5,7 @@ namespace Platform\Reporting\Verbalization\Channel;
 use Illuminate\Support\Collection;
 use Platform\Core\Models\VerbalizationChannel;
 use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Verbalization\Feed\AtomFeedRenderer;
+use Platform\Reporting\Verbalization\Feed\AtomFeedRenderer;
 
 /**
  * RSS/Atom-Kanal — delegiert an den bestehenden AtomFeedRenderer. Damit bleibt

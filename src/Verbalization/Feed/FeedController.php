@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Platform\Core\Models\VerbalizationChannel;
 use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Verbalization\Channel\ChannelRendererRegistry;
+use Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry;
 
 /**
  * Public Endpoint fuer Verbalization-Kanaele (Pull-Kanaele wie RSS/Atom).
