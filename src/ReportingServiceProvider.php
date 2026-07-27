@@ -57,16 +57,10 @@ class ReportingServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/reporting.php', 'reporting');
 
         /**
-         * SWITCH-FLIP (noch NICHT aktiv): ReportEngine-Binding auf die Modul-Engine.
-         *
-         * Erst aktivieren, wenn im selben Schritt das Binding in CoreServiceProvider
-         * ENTFERNT wird — sonst überschreiben sich Core- und Modul-Binding je nach
-         * Provider-Reihenfolge (nicht-deterministisch). Bis dahin bedient Core.
-         *
-         * $this->app->singleton(
-         *     \Platform\Core\Verbalization\Contracts\ReportEngine::class,
-         *     \Platform\Reporting\Verbalization\ReportingEngine::class,
-         * );
+         * ReportEngine-Binding: siehe boot(). Bewusst NICHT hier in register(),
+         * sondern in boot() — so überschreibt es deterministisch Cores
+         * Fallback-Binding (register läuft vor boot). Hält Core frei von jedem
+         * Verweis aufs reporting-Modul.
          */
 
         /**
@@ -96,6 +90,17 @@ class ReportingServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // ── SWITCH: Verbalisierung fährt ab jetzt die Modul-Engine ──────────
+        // In boot() (nicht register()), damit es Cores Fallback-Binding aus
+        // CoreServiceProvider::register() deterministisch überschreibt (boot läuft
+        // nach allen register()). Ist reporting installiert → ReportingEngine;
+        // sonst bleibt Cores CoreVerbalizationEngine. Contract entfernt später den
+        // Core-Fallback samt Engine.
+        $this->app->singleton(
+            \Platform\Core\Verbalization\Contracts\ReportEngine::class,
+            \Platform\Reporting\Verbalization\ReportingEngine::class,
+        );
+
         /**
          * SCHRITT 1: Modul-Registrierung prüfen
          * 
