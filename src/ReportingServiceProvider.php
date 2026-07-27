@@ -55,7 +55,20 @@ class ReportingServiceProvider extends ServiceProvider
          * WICHTIG: Muss in register() sein, nicht in boot()!
          */
         $this->mergeConfigFrom(__DIR__.'/../config/reporting.php', 'reporting');
-        
+
+        /**
+         * SWITCH-FLIP (noch NICHT aktiv): ReportEngine-Binding auf die Modul-Engine.
+         *
+         * Erst aktivieren, wenn im selben Schritt das Binding in CoreServiceProvider
+         * ENTFERNT wird — sonst überschreiben sich Core- und Modul-Binding je nach
+         * Provider-Reihenfolge (nicht-deterministisch). Bis dahin bedient Core.
+         *
+         * $this->app->singleton(
+         *     \Platform\Core\Verbalization\Contracts\ReportEngine::class,
+         *     \Platform\Reporting\Verbalization\ReportingEngine::class,
+         * );
+         */
+
         /**
          * Commands registrieren (optional)
          * 
@@ -193,14 +206,52 @@ class ReportingServiceProvider extends ServiceProvider
          * <livewire:reporting.dashboard />
          */
         $this->registerLivewireComponents();
-        
-        /**
-         * SCHRITT 7: Tools registrieren (optional)
-         * 
-         * Falls dein Modul AI/Chat-Tools hat:
-         * 
-         * $this->registerTools();
-         */
+
+        // Verbalization-MCP-Tools (übernommen aus Core). Idempotent: registriert
+        // nur, was nicht schon (von Core) registriert ist. Beim Contract-Schritt
+        // fällt der Core-Block weg und dieser hier übernimmt.
+        $this->registerTools();
+    }
+
+    /**
+     * Registriert die Verbalization-Tools am zentralen ToolRegistry.
+     * afterResolving, damit Reihenfolge/Timing wie bei Core passt.
+     */
+    protected function registerTools(): void
+    {
+        $tools = [
+            \Platform\Reporting\Tools\ListRecipesTool::class,
+            \Platform\Reporting\Tools\CreateRecipeTool::class,
+            \Platform\Reporting\Tools\UpdateRecipeTool::class,
+            \Platform\Reporting\Tools\DeleteRecipeTool::class,
+            \Platform\Reporting\Tools\ListFeedsTool::class,
+            \Platform\Reporting\Tools\GetFeedTool::class,
+            \Platform\Reporting\Tools\CreateFeedTool::class,
+            \Platform\Reporting\Tools\UpdateFeedTool::class,
+            \Platform\Reporting\Tools\DeleteFeedTool::class,
+            \Platform\Reporting\Tools\RefreshFeedTool::class,
+            \Platform\Reporting\Tools\ListOutputsTool::class,
+            \Platform\Reporting\Tools\ListChannelsTool::class,
+            \Platform\Reporting\Tools\CreateChannelTool::class,
+            \Platform\Reporting\Tools\UpdateChannelTool::class,
+            \Platform\Reporting\Tools\DeleteChannelTool::class,
+        ];
+
+        $this->app->afterResolving(\Platform\Core\Tools\ToolRegistry::class, function ($registry) use ($tools) {
+            foreach ($tools as $cls) {
+                if (! class_exists($cls)) {
+                    continue;
+                }
+                try {
+                    $tool = $this->app->make($cls);
+                    if (! $registry->has($tool->getName())) {
+                        $registry->register($tool);
+                    }
+                } catch (\Throwable $e) {
+                    // still — ein Tool darf den Boot nicht sprengen.
+                }
+            }
+        });
     }
 
     /**

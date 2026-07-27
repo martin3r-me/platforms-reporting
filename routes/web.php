@@ -19,6 +19,7 @@
  */
 
 use Platform\Reporting\Livewire\Dashboard;
+use Platform\Reporting\Livewire\Factory;
 use Platform\Reporting\Livewire\Showcase;
 
 /**
@@ -27,6 +28,12 @@ use Platform\Reporting\Livewire\Showcase;
  * Hauptübersicht des Moduls
  */
 Route::get('/', Dashboard::class)->name('reporting.dashboard');
+
+/**
+ * Baukasten (Verbalization Factory) — ersetzt core.verbalization.factory.
+ * Lädt erst, wenn das Modul registriert ist (Config mit 'navigation' → Switch-Phase).
+ */
+Route::get('/factory', Factory::class)->name('reporting.factory');
 
 /**
  * nx-Showcase Route
