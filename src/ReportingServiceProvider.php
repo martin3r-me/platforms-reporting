@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Module Template Service Provider
+ * Reporting Service Provider
  * 
  * Dieser Service Provider ist das Herzstück jedes Platform-Moduls.
  * 
@@ -121,7 +121,7 @@ class ReportingServiceProvider extends ServiceProvider
              */
             PlatformCore::registerModule([
                 'key'        => 'reporting', // Eindeutiger Schlüssel
-                'title'      => 'Module Template', // Anzeige-Name
+                'title'      => 'Reporting', // Anzeige-Name
                 'routing'    => config('reporting.routing'),
                 'guard'      => config('reporting.guard'),
                 'navigation' => config('reporting.navigation'),

@@ -35,7 +35,7 @@ class Dashboard extends Component
         $this->dispatch('comms', [
             'model' => null,
             'modelId' => null,
-            'subject' => 'Module Template Dashboard',
+            'subject' => 'Reporting Dashboard',
             'description' => 'Übersicht des Template-Moduls',
             'url' => route('reporting.dashboard'),
             'source' => 'reporting.dashboard',

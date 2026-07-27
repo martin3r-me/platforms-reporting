@@ -19,7 +19,7 @@
 <div>
     {{-- Modul Header --}}
     <div x-show="!collapsed" class="p-3 text-sm italic text-[var(--nx-text)] uppercase border-b border-[color:var(--nx-line)] mb-2">
-        Module Template
+        Reporting
     </div>
 
     {{-- Abschnitt: Allgemein --}}

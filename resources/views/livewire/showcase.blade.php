@@ -30,13 +30,13 @@
 
 <x-ui-page>
     <x-slot name="navbar">
-        <x-ui-page-navbar title="Module Template" />
+        <x-ui-page-navbar title="Reporting" />
     </x-slot>
 
     {{-- Actionbar: ≥2 Aktionen → EIN Dropdown (Konvention) --}}
     <x-slot name="actionbar">
         <x-ui-page-actionbar :breadcrumbs="[
-            ['label' => 'Module Template', 'href' => route('reporting.dashboard'), 'icon' => 'cube'],
+            ['label' => 'Reporting', 'href' => route('reporting.dashboard'), 'icon' => 'cube'],
             ['label' => 'nx-Showcase'],
         ]">
             <x-nx-dropdown label="Aktionen">

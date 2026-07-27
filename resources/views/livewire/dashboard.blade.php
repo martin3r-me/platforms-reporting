@@ -22,7 +22,7 @@
 <x-ui-page>
     {{-- Navbar --}}
     <x-slot name="navbar">
-        <x-ui-page-navbar title="Module Template" />
+        <x-ui-page-navbar title="Reporting" />
     </x-slot>
 
     {{--
@@ -32,7 +32,7 @@
     --}}
     <x-slot name="actionbar">
         <x-ui-page-actionbar :breadcrumbs="[
-            ['label' => 'Module Template', 'icon' => 'cube'],
+            ['label' => 'Reporting', 'icon' => 'cube'],
         ]">
             <x-nx-button variant="primary" size="sm" wire:click="$refresh">
                 @svg('heroicon-o-plus', 'w-4 h-4')

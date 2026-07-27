@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Module Template Web Routes
+ * Reporting Web Routes
  * 
  * Diese Datei definiert alle Web-Routes für das Modul.
  * 

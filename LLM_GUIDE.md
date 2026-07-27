@@ -1,4 +1,4 @@
-# LLM Guide für Module Template
+# LLM Guide für Reporting
 
 Diese Datei ist speziell für **Large Language Models (LLMs)** geschrieben, um das Verständnis und die Arbeit mit diesem Template zu erleichtern.
 

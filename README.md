@@ -1,4 +1,4 @@
-# Platform Module Template
+# Platform Reporting
 
 Dieses Modul dient als **Template und Startpunkt** für neue Module in der Platform.
 

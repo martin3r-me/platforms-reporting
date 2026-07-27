@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Module Template Configuration
+ * Reporting Configuration
  * 
  * Diese Config-Datei definiert die Konfiguration für das Modul.
  * 

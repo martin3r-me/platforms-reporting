@@ -1,4 +1,4 @@
-# Module Template — Design Brief
+# Reporting — Design Brief
 
 ## System: nx (plattformweit, Notion-inspiriert)
 
