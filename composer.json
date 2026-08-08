@@ -1,6 +1,6 @@
 {
     "name": "martin3r/platform-reporting",
-    "description": "Template Module for Platform - Use this as a starting point for new modules",
+    "description": "Reporting Module for Platform - Verbalisierung/Reporting-Engine (aus Core extrahiert via ReportEngine-Facade)",
     "type": "library",
     "license": "MIT",
     "authors": [
