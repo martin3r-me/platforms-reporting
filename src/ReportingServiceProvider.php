@@ -56,6 +56,12 @@ class ReportingServiceProvider extends ServiceProvider
          */
         $this->mergeConfigFrom(__DIR__.'/../config/reporting.php', 'reporting');
 
+        // Verbalization-Config (aus Core übernommen). mergeConfigFrom überschreibt
+        // bestehende Keys nicht — Core gewinnt, solange es parallel läuft; fehlt
+        // Core, füllt dieses Modul den Fallback. Contract-Schritt: Config-Hoheit
+        // wandert vollständig hierher.
+        $this->mergeConfigFrom(__DIR__.'/../config/verbalization.php', 'verbalization');
+
         /**
          * ReportEngine-Binding: siehe boot(). Bewusst NICHT hier in register(),
          * sondern in boot() — so überschreibt es deterministisch Cores
@@ -63,17 +69,12 @@ class ReportingServiceProvider extends ServiceProvider
          * Verweis aufs reporting-Modul.
          */
 
-        /**
-         * Commands registrieren (optional)
-         * 
-         * Falls dein Modul Artisan Commands hat:
-         * 
-         * if ($this->app->runningInConsole()) {
-         *     $this->commands([
-         *         \Platform\Reporting\Console\Commands\YourCommand::class,
-         *     ]);
-         * }
-         */
+        // Feed-Refresh-Command (Modul-Pendant zu core `verbalization:refresh-feeds`).
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Platform\Reporting\Console\Commands\RefreshReportingFeedsCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -166,9 +167,28 @@ class ReportingServiceProvider extends ServiceProvider
              */
         }
 
+        // ── Öffentliche Feed-Route (Modul-Pendant zu Cores verbalization-feeds) ──
+        // Nicht im ModuleRouter::group('reporting') (das setzt Auth + /reporting-
+        // Prefix) — der Feed-Endpoint liegt bewusst auf /feed/{token} an der Root,
+        // ohne Auth. Gleicher Pfad wie Core, eigener Route-Name (route:cache-sicher).
+        // Solange Core parallel läuft, greift Cores früher gebundene Route; nach dem
+        // Contract-Schritt (Core-Route entfällt) übernimmt diese.
+        \Illuminate\Support\Facades\Route::domain(parse_url(config('app.url'), PHP_URL_HOST))
+            ->middleware(['web'])
+            ->group(__DIR__.'/../routes/verbalization-feeds.php');
+
+        // ── Feed-Refresh-Schedule (Modul-Pendant zu Cores Einträgen) ────────────
+        // Sequenzieller Scheduler-Lauf + state_hash-Dedup im FeedService machen den
+        // Parallelbetrieb mit Core sicher: Core läuft zuerst und erzeugt Outputs,
+        // dieser Lauf sieht denselben Hash und skippt (kein Doppel-Output).
+        $this->callAfterResolving(\Illuminate\Console\Scheduling\Schedule::class, function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+            $schedule->command('reporting:refresh-feeds --cadence=daily')->dailyAt('04:00')->withoutOverlapping();
+            $schedule->command('reporting:refresh-feeds --cadence=weekly')->weeklyOn(1, '04:30')->withoutOverlapping();
+        });
+
         /**
          * SCHRITT 3: Migrationen laden
-         * 
+         *
          * Lädt alle Migrationen aus database/migrations/
          * Wird automatisch bei `php artisan migrate` ausgeführt.
          */
