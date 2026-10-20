@@ -24,7 +24,6 @@
 namespace Platform\Reporting;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Platform\Core\PlatformCore;
@@ -114,7 +113,7 @@ class ReportingServiceProvider extends ServiceProvider
         if (
             config()->has('reporting.routing') &&
             config()->has('reporting.navigation') &&
-            Schema::hasTable('modules')
+            PlatformCore::modulesTableExists()
         ) {
             /**
              * Modul bei PlatformCore registrieren
