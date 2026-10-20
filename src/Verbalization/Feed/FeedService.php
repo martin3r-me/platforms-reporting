@@ -132,16 +132,6 @@ class FeedService
             ->distinct()
             ->get();
 
-        // Fallback: alte organization_entity_links-Tabelle (deprecated, fuer Rollback noch da).
-        if ($links->isEmpty() && \Schema::hasTable('organization_entity_links')) {
-            $links = DB::table('organization_entity_links')
-                ->whereIn('entity_id', $entityScope)
-                ->whereIn('linkable_type', $dbTypes)
-                ->select('linkable_type', 'linkable_id')
-                ->distinct()
-                ->get();
-        }
-
         return $links->map(function ($row) use ($aliases) {
             $subjectType = $aliases[$row->linkable_type] ?? $row->linkable_type;
             return ['type' => $subjectType, 'id' => $row->linkable_id];
