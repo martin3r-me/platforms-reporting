@@ -127,6 +127,7 @@ class ReportingServiceProvider extends ServiceProvider
             PlatformCore::registerModule([
                 'key'        => 'reporting', // Eindeutiger Schlüssel
                 'title'      => 'Reporting', // Anzeige-Name
+                'group'      => 'finance',
                 'routing'    => config('reporting.routing'),
                 'guard'      => config('reporting.guard'),
                 'navigation' => config('reporting.navigation'),
