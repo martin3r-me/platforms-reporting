@@ -20,17 +20,22 @@
 
 use Platform\Reporting\Livewire\Dashboard;
 use Platform\Reporting\Livewire\Factory;
+use Platform\Reporting\Livewire\Reports\Builder;
 use Platform\Reporting\Livewire\Showcase;
 
 /**
- * Dashboard Route
- *
- * Hauptübersicht des Moduls
+ * Berichte — Startseite des Moduls (Liste aller Berichte).
  */
 Route::get('/', Dashboard::class)->name('reporting.dashboard');
 
 /**
- * Baukasten (Verbalization Factory).
+ * Bericht-Baukasten — neu anlegen / bearbeiten. Ein Bericht ist ein Feed.
+ */
+Route::get('/reports/new', Builder::class)->name('reporting.reports.create');
+Route::get('/reports/{feed}', Builder::class)->whereNumber('feed')->name('reporting.reports.edit');
+
+/**
+ * Bausteine (Diagnose: Sammler, Perspektiven, Metrik-Provider, Kanäle).
  */
 Route::get('/factory', Factory::class)->name('reporting.factory');
 

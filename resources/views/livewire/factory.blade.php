@@ -7,9 +7,9 @@
     @endphp
 
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-[var(--ui-secondary)]">Verbalizer — Baukasten</h1>
+        <h1 class="text-2xl font-semibold text-[var(--ui-secondary)]">Bausteine</h1>
         <p class="text-sm text-[var(--ui-muted)] mt-1 max-w-3xl leading-relaxed">
-            Ueberblick ueber alle registrierten Bausteine: welche Subject-Types werden bedient, welche Recipes existieren, welche EntityLinkProvider liefern welche Metriken, welche Kanal-Renderer sind verfuegbar. Rein Diagnose — Konfiguration weiter ueber MCP-Tools.
+            Ueberblick ueber alle registrierten Bausteine: welche Subject-Types werden bedient, welche Recipes existieren, welche EntityLinkProvider liefern welche Metriken, welche Kanal-Renderer sind verfuegbar. Rein Diagnose — Berichte stellst du unter „Berichte" zusammen.
         </p>
     </div>
 

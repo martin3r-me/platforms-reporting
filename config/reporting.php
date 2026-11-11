@@ -42,7 +42,7 @@ return [
      */
     'navigation' => [
         'route' => 'reporting.dashboard',
-        'icon'  => 'heroicon-o-cube',
+        'icon'  => 'heroicon-o-document-chart-bar',
         'order' => 100, // Hohe Zahl = weiter unten in der Navigation
     ],
 
@@ -68,18 +68,17 @@ return [
      */
     'sidebar' => [
         [
-            'group' => 'Allgemein',
+            'group' => 'Berichte',
             'items' => [
-                [
-                    'label' => 'Dashboard',
-                    'route' => 'reporting.dashboard',
-                    'icon'  => 'heroicon-o-home',
-                ],
-                [
-                    'label' => 'nx-Showcase',
-                    'route' => 'reporting.showcase',
-                    'icon'  => 'heroicon-o-swatch',
-                ],
+                ['label' => 'Alle Berichte', 'route' => 'reporting.dashboard', 'icon' => 'heroicon-o-document-text'],
+                ['label' => 'Neuer Bericht', 'route' => 'reporting.reports.create', 'icon' => 'heroicon-o-plus'],
+            ],
+        ],
+        [
+            'group' => 'Werkstatt',
+            'items' => [
+                ['label' => 'Bausteine', 'route' => 'reporting.factory', 'icon' => 'heroicon-o-wrench-screwdriver'],
+                ['label' => 'nx-Showcase', 'route' => 'reporting.showcase', 'icon' => 'heroicon-o-swatch'],
             ],
         ],
     ],
