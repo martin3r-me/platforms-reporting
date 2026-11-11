@@ -279,7 +279,8 @@ class ReportingServiceProvider extends ServiceProvider
 
     /**
      * Registriert die Verbalization-Tools am zentralen ToolRegistry.
-     * afterResolving, damit Reihenfolge/Timing wie bei Core passt.
+     * Direkt resolven (wie dev/planner) — afterResolving greift nicht, weil die
+     * Registry beim Boot der Module längst aufgelöst ist.
      */
     protected function registerTools(): void
     {
@@ -301,21 +302,22 @@ class ReportingServiceProvider extends ServiceProvider
             \Platform\Reporting\Tools\DeleteChannelTool::class,
         ];
 
-        $this->app->afterResolving(\Platform\Core\Tools\ToolRegistry::class, function ($registry) use ($tools) {
-            foreach ($tools as $cls) {
-                if (! class_exists($cls)) {
-                    continue;
+        try {
+            $registry = resolve(\Platform\Core\Tools\ToolRegistry::class);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        foreach ($tools as $cls) {
+            try {
+                $tool = $this->app->make($cls);
+                if (! $registry->has($tool->getName())) {
+                    $registry->register($tool);
                 }
-                try {
-                    $tool = $this->app->make($cls);
-                    if (! $registry->has($tool->getName())) {
-                        $registry->register($tool);
-                    }
-                } catch (\Throwable $e) {
-                    // still — ein Tool darf den Boot nicht sprengen.
-                }
+            } catch (\Throwable $e) {
+                // still — ein Tool darf den Boot nicht sprengen.
             }
-        });
+        }
     }
 
     /**
