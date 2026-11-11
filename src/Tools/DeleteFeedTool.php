@@ -6,7 +6,7 @@ use Platform\Core\Contracts\ToolContext;
 use Platform\Core\Contracts\ToolContract;
 use Platform\Core\Contracts\ToolMetadataContract;
 use Platform\Core\Contracts\ToolResult;
-use Platform\Core\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationFeed;
 
 class DeleteFeedTool implements ToolContract, ToolMetadataContract
 {

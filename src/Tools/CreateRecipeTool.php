@@ -7,7 +7,7 @@ use Platform\Core\Contracts\ToolContext;
 use Platform\Core\Contracts\ToolContract;
 use Platform\Core\Contracts\ToolMetadataContract;
 use Platform\Core\Contracts\ToolResult;
-use Platform\Core\Models\VerbalizationRecipe;
+use Platform\Reporting\Models\VerbalizationRecipe;
 
 /**
  * core.verbalization.recipes.POST

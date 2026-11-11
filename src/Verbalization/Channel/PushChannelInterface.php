@@ -2,9 +2,9 @@
 
 namespace Platform\Reporting\Verbalization\Channel;
 
-use Platform\Core\Models\VerbalizationChannel;
-use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Models\VerbalizationOutput;
+use Platform\Reporting\Models\VerbalizationChannel;
+use Platform\Reporting\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationOutput;
 
 /**
  * Push-Kanal — liefert einen einzelnen frischen Output aktiv aus (Obsidian-Datei

@@ -30,8 +30,7 @@ use Platform\Reporting\Livewire\Showcase;
 Route::get('/', Dashboard::class)->name('reporting.dashboard');
 
 /**
- * Baukasten (Verbalization Factory) — ersetzt core.verbalization.factory.
- * Lädt erst, wenn das Modul registriert ist (Config mit 'navigation' → Switch-Phase).
+ * Baukasten (Verbalization Factory).
  */
 Route::get('/factory', Factory::class)->name('reporting.factory');
 

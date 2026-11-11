@@ -4,9 +4,9 @@ namespace Platform\Reporting\Verbalization\Channel;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Platform\Core\Models\VerbalizationChannel;
-use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Models\VerbalizationOutput;
+use Platform\Reporting\Models\VerbalizationChannel;
+use Platform\Reporting\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationOutput;
 
 /**
  * Pull-Kanal: rendert Feed-Outputs als eigenstaendige HTML-Seite. Ohne Login,

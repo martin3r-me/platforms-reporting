@@ -5,8 +5,8 @@ namespace Platform\Reporting\Verbalization\Feed;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Models\VerbalizationOutput;
+use Platform\Reporting\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationOutput;
 use Platform\Core\Verbalization\GuardRails;
 use Platform\Reporting\Verbalization\Recipe\RecipeResolver;
 use Platform\Core\Verbalization\StyleProfile;
@@ -362,7 +362,7 @@ class FeedService
         }
 
         $errors = [];
-        $channels = \Platform\Core\Models\VerbalizationChannel::where('verbalization_feed_id', $feed->id)
+        $channels = \Platform\Reporting\Models\VerbalizationChannel::where('verbalization_feed_id', $feed->id)
             ->where('is_active', true)
             ->get();
 

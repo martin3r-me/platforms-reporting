@@ -55,10 +55,7 @@ class ReportingServiceProvider extends ServiceProvider
          */
         $this->mergeConfigFrom(__DIR__.'/../config/reporting.php', 'reporting');
 
-        // Verbalization-Config (aus Core übernommen). mergeConfigFrom überschreibt
-        // bestehende Keys nicht — Core gewinnt, solange es parallel läuft; fehlt
-        // Core, füllt dieses Modul den Fallback. Contract-Schritt: Config-Hoheit
-        // wandert vollständig hierher.
+        // Verbalization-Config — gehört dem Modul (Key 'verbalization' bleibt stabil).
         $this->mergeConfigFrom(__DIR__.'/../config/verbalization.php', 'verbalization');
 
         /**
@@ -67,6 +64,8 @@ class ReportingServiceProvider extends ServiceProvider
          * Fallback-Binding (register läuft vor boot). Hält Core frei von jedem
          * Verweis aufs reporting-Modul.
          */
+
+        $this->registerEngineBindings();
 
         // Feed-Refresh-Command (Modul-Pendant zu core `verbalization:refresh-feeds`).
         if ($this->app->runningInConsole()) {
@@ -90,12 +89,8 @@ class ReportingServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ── SWITCH: Verbalisierung fährt ab jetzt die Modul-Engine ──────────
-        // In boot() (nicht register()), damit es Cores Fallback-Binding aus
-        // CoreServiceProvider::register() deterministisch überschreibt (boot läuft
-        // nach allen register()). Ist reporting installiert → ReportingEngine;
-        // sonst bleibt Cores CoreVerbalizationEngine. Contract entfernt später den
-        // Core-Fallback samt Engine.
+        // ReportEngine — Produzenten (planner, …) hängen nur am Core-Contract. Ohne
+        // reporting ist er nicht gebunden; Produzenten prüfen per app()->bound().
         $this->app->singleton(
             \Platform\Core\Verbalization\Contracts\ReportEngine::class,
             \Platform\Reporting\Verbalization\ReportingEngine::class,
@@ -167,12 +162,10 @@ class ReportingServiceProvider extends ServiceProvider
              */
         }
 
-        // ── Öffentliche Feed-Route (Modul-Pendant zu Cores verbalization-feeds) ──
+        // ── Öffentliche Feed-Route ──
         // Nicht im ModuleRouter::group('reporting') (das setzt Auth + /reporting-
         // Prefix) — der Feed-Endpoint liegt bewusst auf /feed/{token} an der Root,
-        // ohne Auth. Gleicher Pfad wie Core, eigener Route-Name (route:cache-sicher).
-        // Solange Core parallel läuft, greift Cores früher gebundene Route; nach dem
-        // Contract-Schritt (Core-Route entfällt) übernimmt diese.
+        // ohne Auth (externe Reader-URLs bleiben stabil).
         \Illuminate\Support\Facades\Route::domain(parse_url(config('app.url'), PHP_URL_HOST))
             ->middleware(['web'])
             ->group(__DIR__.'/../routes/verbalization-feeds.php');
@@ -232,10 +225,56 @@ class ReportingServiceProvider extends ServiceProvider
          */
         $this->registerLivewireComponents();
 
-        // Verbalization-MCP-Tools (übernommen aus Core). Idempotent: registriert
-        // nur, was nicht schon (von Core) registriert ist. Beim Contract-Schritt
-        // fällt der Core-Block weg und dieser hier übernimmt.
+        // Verbalization-MCP-Tools (Namen core.verbalization.* bleiben für bestehende Clients).
         $this->registerTools();
+    }
+
+    /**
+     * Engine-Bindings — die Engine gehört dem Modul; Core hält nur Primitive,
+     * Registries (Template, SubjectCollector) und Contracts.
+     */
+    protected function registerEngineBindings(): void
+    {
+        $this->app->singleton(\Platform\Reporting\Verbalization\Verbalizer::class);
+        $this->app->singleton(\Platform\Reporting\Verbalization\Baseline\BaselineService::class);
+
+        $this->app->singleton(\Platform\Reporting\Verbalization\Feed\AtomFeedRenderer::class, function () {
+            return new \Platform\Reporting\Verbalization\Feed\AtomFeedRenderer(
+                publicBaseUrl: rtrim((string) config('app.url'), '/'),
+            );
+        });
+
+        // Kanäle — weitere Ausgabeformate (Mail, PDF, Podcast, …) klemmen sich hier an.
+        $this->app->singleton(\Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry::class, function ($app) {
+            $registry = new \Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry();
+            $registry->register(new \Platform\Reporting\Verbalization\Channel\RssChannelRenderer(
+                $app->make(\Platform\Reporting\Verbalization\Feed\AtomFeedRenderer::class),
+            ));
+            $registry->register(new \Platform\Reporting\Verbalization\Channel\ObsidianChannelRenderer(
+                $app->make(\Platform\Core\Services\ObsidianStorageService::class),
+            ));
+            $registry->register(new \Platform\Reporting\Verbalization\Channel\WebChannelRenderer());
+
+            return $registry;
+        });
+
+        $this->app->singleton(\Platform\Reporting\Verbalization\Feed\FeedService::class, function ($app) {
+            return new \Platform\Reporting\Verbalization\Feed\FeedService(
+                $app->make(\Platform\Core\Verbalization\SubjectCollector\SubjectCollectorRegistry::class),
+                $app->make(\Platform\Reporting\Verbalization\Recipe\RecipeResolver::class),
+                $app->make(\Platform\Reporting\Verbalization\Verbalizer::class),
+                $app->make(\Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry::class),
+            );
+        });
+
+        // Baseline-Port für Core-Collectoren (Entity-Pulse-Deltas). Nur wenn Core den
+        // Contract schon kennt — sonst würde der Adapter beim Laden fehlschlagen.
+        if (interface_exists(\Platform\Core\Verbalization\Contracts\BaselineStore::class)) {
+            $this->app->singleton(
+                \Platform\Core\Verbalization\Contracts\BaselineStore::class,
+                \Platform\Reporting\Verbalization\Baseline\ReportingBaselineStore::class,
+            );
+        }
     }
 
     /**

@@ -6,7 +6,7 @@ use Platform\Core\Contracts\ToolContext;
 use Platform\Core\Contracts\ToolContract;
 use Platform\Core\Contracts\ToolMetadataContract;
 use Platform\Core\Contracts\ToolResult;
-use Platform\Core\Models\VerbalizationOutput;
+use Platform\Reporting\Models\VerbalizationOutput;
 
 class ListOutputsTool implements ToolContract, ToolMetadataContract
 {

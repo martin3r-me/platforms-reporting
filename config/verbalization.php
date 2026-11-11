@@ -2,12 +2,10 @@
 
 /*
 |--------------------------------------------------------------------------
-| Verbalization-Config (aus Core übernommen)
+| Verbalization-Config
 |--------------------------------------------------------------------------
-| Bewusst derselbe Config-Key ('verbalization') wie im Core. mergeConfigFrom
-| überschreibt bestehende Keys NICHT — solange Core parallel läuft, gewinnt
-| dessen Config; fehlt Core, füllt dieses Modul den Fallback. Beim Contract-
-| Schritt wandert die Config-Hoheit vollständig hierher.
+| Config-Key 'verbalization' (historisch aus Core) — bleibt für bestehende
+| .env-/Config-Overrides stabil.
 */
 
 return [

@@ -3,8 +3,8 @@
 namespace Platform\Reporting\Verbalization\Feed;
 
 use Illuminate\Support\Collection;
-use Platform\Core\Models\VerbalizationFeed;
-use Platform\Core\Models\VerbalizationOutput;
+use Platform\Reporting\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationOutput;
 
 /**
  * Atom 1.0 Renderer fuer VerbalizationFeeds.

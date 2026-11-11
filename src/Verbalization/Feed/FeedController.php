@@ -4,8 +4,8 @@ namespace Platform\Reporting\Verbalization\Feed;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Platform\Core\Models\VerbalizationChannel;
-use Platform\Core\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationChannel;
+use Platform\Reporting\Models\VerbalizationFeed;
 use Platform\Reporting\Verbalization\Channel\ChannelRendererRegistry;
 
 /**

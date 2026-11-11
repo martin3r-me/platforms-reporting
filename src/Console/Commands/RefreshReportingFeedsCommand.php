@@ -3,7 +3,7 @@
 namespace Platform\Reporting\Console\Commands;
 
 use Illuminate\Console\Command;
-use Platform\Core\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationFeed;
 use Platform\Core\SemanticLayer\Services\SemanticLayerResolver;
 use Platform\Core\Verbalization\StyleProfile;
 use Platform\Reporting\Verbalization\Feed\FeedService;
@@ -11,16 +11,9 @@ use Platform\Reporting\Verbalization\Feed\FeedService;
 /**
  * php artisan reporting:refresh-feeds [--cadence=daily|weekly|all] [--feed=ID]
  *
- * Modul-Pendant zu Cores `verbalization:refresh-feeds`. Iteriert über alle
- * aktiven Feeds mit passender refresh_strategy und triggert die Modul-
- * FeedService::refresh().
- *
- * Koexistenz mit Core: der FeedService dedupliziert über den state_hash des
- * jüngsten Outputs (Skip vor dem LLM-Call). Der Laravel-Scheduler führt fällige
- * Commands sequenziell in einem Prozess aus; Core (bootet zuerst) läuft vor
- * diesem Command, erzeugt die Outputs — dieser Lauf sieht denselben Hash und
- * skippt. Kein Doppel-Output. Beim Contract-Schritt fällt Cores Command +
- * Schedule weg und dieses hier übernimmt allein.
+ * Iteriert über alle aktiven Feeds mit passender refresh_strategy und triggert
+ * FeedService::refresh(). Der FeedService dedupliziert über den state_hash des
+ * jüngsten Outputs (Skip vor dem LLM-Call).
  */
 class RefreshReportingFeedsCommand extends Command
 {

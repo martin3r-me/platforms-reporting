@@ -5,7 +5,7 @@ namespace Platform\Reporting\Verbalization\Recipe;
 use Platform\Core\Verbalization\Subject;
 use Platform\Core\Verbalization\Recipe\CollectionRecipe;
 
-use Platform\Core\Models\VerbalizationRecipe;
+use Platform\Reporting\Models\VerbalizationRecipe;
 
 /**
  * Sucht eine Recipe anhand von key + Team-Scope.

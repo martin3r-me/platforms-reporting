@@ -3,7 +3,7 @@
 namespace Platform\Reporting\Verbalization\Baseline;
 
 use Illuminate\Support\Carbon;
-use Platform\Core\Models\VerbalizationBaseline;
+use Platform\Reporting\Models\VerbalizationBaseline;
 
 /**
  * Verwaltet Zeitreihen-Snapshots fuer Metriken pro Subject und ermittelt

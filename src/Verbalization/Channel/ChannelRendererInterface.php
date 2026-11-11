@@ -3,8 +3,8 @@
 namespace Platform\Reporting\Verbalization\Channel;
 
 use Illuminate\Support\Collection;
-use Platform\Core\Models\VerbalizationChannel;
-use Platform\Core\Models\VerbalizationFeed;
+use Platform\Reporting\Models\VerbalizationChannel;
+use Platform\Reporting\Models\VerbalizationFeed;
 
 /**
  * Renderer fuer einen Kanal-Typ (rss, email, pdf, slack, webhook, ...).
