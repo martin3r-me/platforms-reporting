@@ -77,6 +77,9 @@ class Verbalizer
             'system' => $systemPrompt,
             'temperature' => 0.3,
             'max_tokens' => 1024,
+            // Fakten in Prosa übersetzen braucht kaum Nachdenken — hält die Probe
+            // unter dem Gateway-Timeout und spart Tokens.
+            'effort' => 'low',
         ];
         if ($effectiveModel) {
             $options['model'] = $effectiveModel;
