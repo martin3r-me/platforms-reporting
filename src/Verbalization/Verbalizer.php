@@ -89,8 +89,14 @@ class Verbalizer
             options: $options,
         );
 
+        $prose = trim($response['content'] ?? '');
+        if ($prose === '') {
+            // Leere Prosa nie als Ausgabe speichern — lieber laut scheitern.
+            throw new \RuntimeException('Verbalizer: Das Modell hat keinen Text geliefert (' . ($response['model'] ?? 'unbekannt') . ').');
+        }
+
         return new VerbalizationResult(
-            prose: trim($response['content'] ?? ''),
+            prose: $prose,
             factSheet: $factSheet,
             model: $response['model'] ?? 'unknown',
             usage: $response['usage'] ?? [],
