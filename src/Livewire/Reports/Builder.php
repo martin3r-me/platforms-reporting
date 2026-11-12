@@ -180,6 +180,9 @@ class Builder extends Component
                 'position' => $index + 1,
                 'total' => $subjects->count(),
             ];
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Team-Scopes der Module: der Eintrag liegt in einem anderen Team als dem aktuellen.
+            $this->previewError = 'Probe nicht möglich: Der Eintrag liegt in einem anderen Team und ist aus deinem aktuellen Team nicht lesbar. Wechsle ins Team des Eintrags — der geplante Lauf ist davon nicht betroffen.';
         } catch (\Throwable $e) {
             $this->previewError = 'Probe fehlgeschlagen: ' . Str::limit($e->getMessage(), 200);
         }

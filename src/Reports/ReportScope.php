@@ -60,7 +60,7 @@ class ReportScope
             return null;
         }
 
-        return (self::ENTITY_CLASS)::query()->whereKey($id)->value('name');
+        return (self::ENTITY_CLASS)::query()->withoutGlobalScopes()->whereKey($id)->value('name');
     }
 
     /** Gehört die Einheit zum Team? (Auswahl nur aus dem eigenen Team.) */
@@ -84,7 +84,8 @@ class ReportScope
             return [];
         }
 
-        return (self::ENTITY_CLASS)::query()->whereIn('id', $ids)->pluck('name', 'id')->all();
+        // Nur Namen — ohne Team-Scopes, damit globale Berichte über andere Teams lesbar bleiben.
+        return (self::ENTITY_CLASS)::query()->withoutGlobalScopes()->whereIn('id', $ids)->pluck('name', 'id')->all();
     }
 
     /** Lesbarer Name eines Subjects (Einheit, Projekt, …) — Fallback „typ #id". */
@@ -98,7 +99,8 @@ class ReportScope
         $class = Relation::getMorphedModel($alias);
         if ($class && class_exists($class)) {
             try {
-                $model = $class::query()->find($id);
+                // Ohne Team-Scopes: nur der Name, auch wenn der Eintrag in einem anderen Team liegt.
+                $model = $class::query()->withoutGlobalScopes()->find($id);
                 $name = $model?->name ?? $model?->title ?? null;
                 if ($name) {
                     return (string) $name;

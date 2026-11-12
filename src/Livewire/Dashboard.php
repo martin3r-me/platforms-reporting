@@ -93,7 +93,7 @@ class Dashboard extends Component
                 'title' => $f->title,
                 'icon' => $info['icon'],
                 'summary' => implode(' · ', array_filter([$info['label'], $where, $perspective, $rhythm[$f->refresh_strategy] ?? 'auf Abruf'])),
-                'excerpt' => $last ? \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags(\Illuminate\Support\Str::markdown((string) $last->prose)))), 220) : null,
+                'excerpt' => $last ? \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags(\Illuminate\Support\Str::markdown((string) $last->prose)), ENT_QUOTES | ENT_HTML5))), 220) : null,
                 'last' => $f->last_refreshed_at?->diffForHumans(),
                 'outputs' => (int) ($counts[$f->id] ?? 0),
                 'active' => (bool) $f->is_active,
