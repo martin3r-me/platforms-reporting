@@ -23,7 +23,7 @@ class CreateRecipeTool implements ToolContract, ToolMetadataContract
 
     public function getDescription(): string
     {
-        return 'POST /verbalization/recipes - Legt eine Verbalization-Recipe an. Pflicht: key, name, subject_type, sources, style. Optional: description, guards, llm, freshness_requirement, scope ("global"|"team", default "team"). Beispiel-sources: {"description": true, "frogs": {"enabled": true, "top_n": 3}, "canvas": {"enabled": true, "max_highlights": 2}}. Beispiel-style: {"address": "sie", "tone": "formal", "rhythm": "short", "extra_instruction": "Maximal 3 Saetze."}. Beispiel-llm: {"provider": "openai", "model": "gpt-4o-2024-08-06"}.';
+        return 'POST /verbalization/recipes - Legt eine Verbalization-Recipe an. Pflicht: key, name, subject_type, sources, style. Optional: description, guards, llm, freshness_requirement, scope ("global"|"team", default "team"). Beispiel-sources: {"description": true, "frogs": {"enabled": true, "top_n": 3}, "canvas": {"enabled": true, "max_highlights": 2}}. Beispiel-style: {"address": "sie", "tone": "formal", "rhythm": "short", "extra_instruction": "Maximal 3 Saetze."}. Beispiel-llm: {"provider": "anthropic"} (ohne model = Default-Modell).';
     }
 
     public function getSchema(): array
@@ -49,7 +49,7 @@ class CreateRecipeTool implements ToolContract, ToolMetadataContract
                 ],
                 'llm' => [
                     'type' => 'object',
-                    'description' => 'Optional: LLM-Praeferenz {"provider": "openai|anthropic|...", "model": "..."}. Beide Felder optional. Feed-Override sticht Recipe, Recipe sticht Config-Default.',
+                    'description' => 'Optional: LLM-Praeferenz {"provider": "anthropic", "model": "..."} — Standard ist die Claude-API. Beide Felder optional. Feed-Override sticht Recipe, Recipe sticht Config-Default.',
                 ],
                 'include_natures' => [
                     'type' => 'array',
